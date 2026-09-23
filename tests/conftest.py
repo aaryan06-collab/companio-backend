@@ -9,6 +9,7 @@ _tmp = tempfile.mkdtemp(prefix="companio-test-")
 os.environ["MINDCARE_LIVE_DB"] = f"sqlite:///{_tmp}/live.db"
 os.environ["MINDCARE_TRAIN_DB"] = f"sqlite:///{_tmp}/demo.db"
 os.environ["MINDCARE_MODEL_PATH"] = f"{_tmp}/test_model.pkl"
+os.environ["MINDCARE_MEDIA_DIR"] = f"{_tmp}/media"
 os.environ["MINDCARE_JWT_SECRET"] = "test-secret-not-for-prod"
 
 import pytest  # noqa: E402

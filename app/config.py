@@ -16,9 +16,11 @@ from pathlib import Path
 SERVER_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = SERVER_DIR / "data"
 MODELS_DIR = SERVER_DIR / "models"
+MEDIA_DIR: Path = Path(os.getenv("MINDCARE_MEDIA_DIR", str(DATA_DIR / "media")))
 
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 MODELS_DIR.mkdir(parents=True, exist_ok=True)
+MEDIA_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def _abs(path: str | Path) -> Path:

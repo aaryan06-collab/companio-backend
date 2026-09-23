@@ -141,6 +141,11 @@ class AnalyticsResponse(BaseModel):
 # â”€â”€ Analytics detail (richer caregiver progress) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 
+# ---- Media (caregiver photo memories) ----
+class MediaUploadResponse(BaseModel):
+    url: str
+
+
 class DetailDayPoint(BaseModel):
     date: str
     playMinutes: int

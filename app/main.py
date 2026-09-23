@@ -15,7 +15,7 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from .database import get_db, init_db
-from .routers import admin, analytics, auth, difficulty, sos, sync
+from .routers import admin, analytics, auth, difficulty, media, sos, sync
 
 app = FastAPI(
     title="Companio API",
@@ -37,6 +37,7 @@ app.include_router(sos.router)
 app.include_router(analytics.router)
 app.include_router(difficulty.router)
 app.include_router(admin.router)
+app.include_router(media.router)
 
 
 @app.on_event("startup")

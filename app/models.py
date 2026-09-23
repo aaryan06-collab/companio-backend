@@ -133,6 +133,21 @@ class SosAlert(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
 
 
+class MediaAsset(Base):
+    """Uploaded caregiver photo memory files (stored on disk under MEDIA_DIR;
+    the row keeps the patient scope and uploader for traceability)."""
+
+    __tablename__ = "media_assets"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)  # file name incl. extension
+    patient_id: Mapped[str] = mapped_column(
+        ForeignKey("accounts.id", ondelete="CASCADE"), index=True
+    )
+    account_id: Mapped[str] = mapped_column(String(64))
+    size_bytes: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
 class ActivityRecord(Base):
     __tablename__ = "activity_records"
 
