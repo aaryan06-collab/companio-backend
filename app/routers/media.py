@@ -1,10 +1,11 @@
-"""Media endpoints: upload + serve caregiver photo memories.
+"""Media endpoints: upload + serve caregiver memory media.
 
-Photos are written to disk under ``MEDIA_DIR`` and scoped to the calling
-device's patient (mirroring the sync inbox). Files are served to any
-authenticated family member so a pulled memory's ``mediaUrl`` renders on a
-separate device. JWT may come via the ``Authorization`` header (used by the
-app's ``Image.network(headers: ...)``) or the ``?token=`` query parameter.
+Photos, videos and voice recordings are written to disk under ``MEDIA_DIR``
+and scoped to the calling device's patient (mirroring the sync inbox). Files
+are served to any authenticated family member so a pulled memory's
+``mediaUrl`` renders on a separate device. JWT may come via the
+``Authorization`` header (used by the app's ``Image.network(headers: ...)``)
+or the ``?token=`` query parameter (used by the video/audio players).
 """
 
 from __future__ import annotations
@@ -34,8 +35,24 @@ from ..security import decode_token
 
 router = APIRouter(prefix="/media", tags=["media"])
 
-MAX_MEDIA_BYTES = 10 * 1024 * 1024
-ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png", "webp", "gif", "heic", "heif"}
+MAX_MEDIA_BYTES = 50 * 1024 * 1024
+ALLOWED_EXTENSIONS = {
+    "jpg",
+    "jpeg",
+    "png",
+    "webp",
+    "gif",
+    "heic",
+    "heif",
+    "mp4",
+    "mov",
+    "webm",
+    "mkv",
+    "m4a",
+    "mp3",
+    "wav",
+    "ogg",
+}
 SAFE_NAME = re.compile(r"^[0-9a-f]{32}\.[a-z0-9]{2,5}$")
 
 _bearer = HTTPBearer(auto_error=False)
@@ -77,14 +94,15 @@ async def upload_media(
     if ext not in ALLOWED_EXTENSIONS or file.content_type is None:
         raise HTTPException(
             status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-            "Only image uploads are allowed (jpg, png, webp, gif, heic)",
+            "Only image, video and audio uploads are allowed "
+            "(jpg, png, webp, gif, heic, mp4, mov, webm, mkv, m4a, mp3, wav, ogg)",
         )
 
     data = await file.read()
     if len(data) > MAX_MEDIA_BYTES:
         raise HTTPException(
             status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-            "Image exceeds 10 MB",
+            "Media exceeds 50 MB",
         )
 
     patient_id = _resolve_patient(db, deviceId, account)
